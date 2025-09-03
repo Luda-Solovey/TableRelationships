@@ -10,13 +10,14 @@ namespace DataBase.Entities
 {
     public class Address
     {
-        //[Key, ForeignKey(nameof(Person))]//тут в дужках вказуємо навігаційну властивість
-        public int PersonId { get; private set; }// зовнішній ключ на таблицю Pearson 
-                                                    //для того, щоб відпрацював сценарій SetNull ОБОВ'ЯЗКОВО треба це поле позначити як null-able
-        public Person PersonAlias { get; set; } = null!; //для того, щоб відпрацював сценарій SetNull ОБОВ'ЯЗКОВО треба це поле позначити як null-able
+        [Key, ForeignKey(nameof(Person))]
+        public int PersonId { get; set; }
+        public string City { get; set; } = "Dnipro";
         public string Street { get; set; } = string.Empty;
-        public string City { get; set; } = string.Empty;
-        public string? ZipCode { get; set; }
-        public string Country { get; set; } = string.Empty;
+        public int HouseNumber { get; set; }
+        public string? Apartment { get; set; }
+        public string? ApartmentNumber { get; set; }
+
+        public Person Person { get; set; } = null!;//якщо адреса є, то обов'язково повинна бути й персона
     }
 }
