@@ -12,6 +12,8 @@ namespace DataBase.Entities
         public Department? Department { get; set; }
         public List<Patient> Patients { get; set; } = [];
 
+        //public List<Patient> PatientsAsFamily { get; set; } = [];
+
         public List<Appointment> Appointments { get; set; } = [];
 
     }

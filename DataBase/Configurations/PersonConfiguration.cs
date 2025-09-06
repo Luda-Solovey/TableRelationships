@@ -13,7 +13,10 @@ namespace DataBase.Configurations
     {
         public void Configure(EntityTypeBuilder<Person> builder)
         {
+            //builder.UseTpcMappingStrategy().ToTable("People");// цей рядок тільки для підходу TPC (Table per Concrete Class)
+            builder.ToTable("People");
             builder.HasKey(p => p.Id);
+            builder.Property(p => p.Id).ValueGeneratedOnAdd();
             builder.HasOne(p => p.Address)
                 .WithOne(a => a.Person)
                 .IsRequired(false)

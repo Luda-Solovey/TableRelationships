@@ -11,7 +11,7 @@ namespace DataBase.Entities
     public class Address
     {
         [Key, ForeignKey(nameof(Person))]
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
         public string City { get; set; } = "Dnipro";
         public string Street { get; set; } = string.Empty;
         public int HouseNumber { get; set; }

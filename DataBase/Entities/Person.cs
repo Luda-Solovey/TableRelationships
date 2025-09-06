@@ -13,7 +13,7 @@ namespace DataBase.Entities
     public class Person
     {
         //[Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         //[MaxLength(50)]
         public string FirstName { get; set; } = string.Empty;

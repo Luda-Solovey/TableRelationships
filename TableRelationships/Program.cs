@@ -1,6 +1,15 @@
 ﻿using DataBase.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+
+//1) Підхід TPH (Table per Hierarchy) (за-замовчуванням ) одна таблиця для всіх
+//2) TPT (Table per Type) Кожен клас (базовий і похідний) має свою таблицю. Зв’язки реалізуються через JOIN. (зв'язок "один до одного" між базовим і похідним)
+//для реалізації в конфігураціях похідних класів треба прописати: modelBuilder.ToTable("Customers");
+
+//TPC (Table per Concrete Class) Кожен конкретний клас має свою таблицю, яка містить усі поля, включаючи успадковані.
+//для реалізації в конфігурації батьківського класу треба прописати: builder.UseTpcMappingStrategy().ToTable("People");
+//в конфігурації дочрніх класів треба прописати: builder.UseTpcMappingStrategy().ToTable("Customers");
 
 
 namespace TableRelationships
@@ -80,7 +89,8 @@ namespace TableRelationships
                 LastName = "Ivanova",
                 DataOfBirth = new DateOnly(1980, 5, 1),
                 Address = patientAddress1,
-                Phone = "0981111133"
+                Phone = "0981111133",
+                Department = department1
             };
 
             Patient patient2 = new Patient()
@@ -89,7 +99,8 @@ namespace TableRelationships
                 LastName = "Krilova",
                 DataOfBirth = new DateOnly(1985, 10, 10),
                 Address = patientAddress2,
-                Phone = "0981111144"
+                Phone = "0981111144",
+                Department = department1
             };
 
             Patient patient3 = new Patient()
@@ -98,7 +109,8 @@ namespace TableRelationships
                 LastName = "Ukolova",
                 DataOfBirth = new DateOnly(1990, 11, 20),
                 Phone = "0981111155",
-                Address = new Address 
+                Department = department2,
+                Address = new Address
                 {
                     City = "Kyiv",
                     Street = "Hreschatyk",
@@ -135,14 +147,32 @@ namespace TableRelationships
             doctor1.Appointments.AddRange([appointment1, appointment3]);
             doctor2.Appointments.Add(appointment2);
 
-            doctor1.Patients.AddRange([ patient1, patient2 ]);// зв'язана сутність (PatientAddress) додасться автоматично
-            doctor2.Patients.Add(patient3 );                // так як вона була вказана при створенні головної сутності (екземплярів Patient)
+            doctor1.Patients.AddRange([patient1, patient2]);// зв'язана сутність (PatientAddress) додасться автоматично
+            doctor2.Patients.Add(patient3);                // так як вона була вказана при створенні головної сутності (екземплярів Patient)
 
             db.Doctors.AddRange(doctor1, doctor2);
             db.Patients.AddRange(patient1, patient2, patient3);
             // db.Appointments.AddRange(appointment1, appointment2, appointment3);  //це зайвий рядок, так як при додаванні в базу  лікарів і пацієнтів  Appointments-и додадуться автоматично як зв'язані сутності
 
             db.SaveChanges();
+
+            //var people = db.People.Where(p => p.Address != null).ToList();
+
+            //foreach (var person in people) 
+            //{
+            //    Console.WriteLine($"{person.Id}, {person.LastName}, {person.FirstName}");
+            //    Console.WriteLine($"Address {person.Address.Street}, {person.Address.City}, {person.Address.HouseNumber}");
+            //}
+
+            var doctors = db.Doctors;
+            Console.WriteLine(doctors.ToQueryString());
+
+
+            foreach (var doctor in doctors)
+            {
+                Console.WriteLine($"{doctor.Id}, {doctor.LastName}, {doctor.FirstName}");
+                Console.WriteLine($"Doc {doctor.DataOfBirth}");
+            }
         }
     }
 }

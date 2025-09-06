@@ -13,6 +13,7 @@ namespace DataBase.Configurations
     {
         public void Configure(EntityTypeBuilder<Doctor> builder)
         {
+            builder.ToTable("Doctors");
             builder.HasMany(d =>d.Appointments).WithOne(a => a.Doctor).OnDelete(DeleteBehavior.NoAction);
             builder.HasMany(d => d.Patients).WithMany(p => p.Doctors); 
             builder.HasOne(d => d.Department).WithMany(d => d.Doctors).OnDelete(DeleteBehavior.NoAction);
